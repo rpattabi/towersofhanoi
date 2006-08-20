@@ -3,18 +3,19 @@
 
 require "Disk"
 
+  #refactor# user can give more than 3 towers
 	SOURCE 	= 0
 	INTERM	= 1
-	DEST		= 2
+	DEST	= 2
 	
 class Tower
 	@bIsSource
 	@bIsDest 	
 	@bIsInterm
-	@designation	
+	attr :designation	
 	@disks
 	
-	def initialize( designation )
+	def initialize( designation ) #refactor# see above
 		@designation = designation
 		
 		if designation == SOURCE

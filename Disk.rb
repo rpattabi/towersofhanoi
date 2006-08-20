@@ -4,7 +4,7 @@
 require "Tower"
 
 class Disk
-	@size # usually 1, 2, or 3
+	@size # usually 1, 2, or 3 #refactor# should be user given size 1-3 or 1-6 etc
 	@tower
 	
 	def initialize( size )
@@ -12,12 +12,12 @@ class Disk
 	end
 	
 	# getSize Property
-	def getSize()
+	def getSize() #refactor# use ruby-attr
 		return @size
 	end
 	
 	# size property
-	def display( thickness = 1 )
+	def display( thickness = 1 ) #refactor# display responsibility shall be handled to somebodyelse.
 		times1 = thickness*@size*2
 		output = "="*times1
 		puts output.to_s.center(10).chomp
