@@ -5,19 +5,18 @@ class Player
 	@towers
 	@disks
 	@direction
-	@currentTower
-	@currentDisk
-	@nextTower
 	
 	def initialize( towers, disks )
 		@towers = towers
 		@disks	= disks
+		@diskMoverCmd = DiskMoverCmd.new
 		
 		#@towers[SOURCE].display
-		displayTowers
+		displayTowers #refactor# Display is not the job of the player.
 	end
 	
 	def solve()
+	   #refactor#direction should not be shown with magic numbers
 		if (@disks.size%2 == 0)
 			@direction = 1
 		else
@@ -35,9 +34,10 @@ class Player
 		end
 
 		#@towers[DEST].display
+		
 	end
 	
-	def move( disk )
+	def move( disk ) #refactor# command pattern
 			if @direction == -1
 				moveLeft( disk )
 			else
@@ -53,9 +53,9 @@ class Player
 		end
 		
 		if tmpTower != disk.getTower
-			disk.getTower.MoveTop
-			tmpTower.AddDisk(disk)
-								displayTowers
+    		#move it to tmpTower
+    	    @diskMoverCmd.move disk, disk.getTower, tmptower
+    		displayTowers #refactor#
 		end
 	end
 	
@@ -67,9 +67,9 @@ class Player
 		end
 		
 		if tmpTower != disk.getTower
-			disk.getTower.MoveTop		
-			tmpTower.AddDisk(disk)
-					displayTowers			
+    		#move it to tmpTower
+    	    @diskMoverCmd.move disk, disk.getTower, tmptower
+    		displayTowers #refactor#
 		end
 	end
 	
@@ -97,21 +97,62 @@ class Player
 		return @towers[DEST]	
 	end
 	
-	def displayTowers()
-					
-				#puts '000000000000000000'	
-				@towers[SOURCE].display
-				puts "SOURCE"
-				puts "\n"*2
-				
-				@towers[INTERM].display
-				puts "INTERM"
-				puts "\n"*2
+    def displayTowers()				
+      #puts '000000000000000000'	
+      @towers[SOURCE].display
+      puts "SOURCE"
+      puts "\n"*2
+      
+      @towers[INTERM].display
+      puts "INTERM"
+      puts "\n"*2
+      
+      @towers[DEST].display
+      puts "DEST"
+      #puts "\n"*3
+      puts '000000000000000000'
+      puts "\n"*4
+    end
+end
 
-				@towers[DEST].display
-				puts "DEST"
-				#puts "\n"*3
-				puts '000000000000000000'
-				puts "\n"*4
-		end
+
+class DiskMoverCmd
+  def initialize()
+    @moveLog = []
+  end
+  
+  def move( disk, toTower )
+    # log the movement
+    @moveLog.push MoveStruct.new( disk, disk.getTower, toTower )
+    
+    # first remove the disk from the tower it is on
+    # then move it to the toTower
+    disk.getTower.MoveTop
+    toTower.AddDisk disk  
+  end
+  
+  def replay()
+    @moveLog.each do |move|
+      move.printMove
+    end
+  end 
+end
+
+
+class Move
+  attr :disk
+  attr :fromTower
+  attr :toTower
+  
+  def initialize( disk, fromTower, toTower)
+    @disk       = disk
+    @fromTower  = fromTower
+    @toTower    = toTower
+  end
+  
+  def printMove()
+    puts " Disk " + disk.size.to_s +
+         " is moved from Tower " + fromTower.designation
+         " to Tower " + toTower.designation
+  end
 end

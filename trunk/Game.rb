@@ -1,12 +1,6 @@
 #Towers of Hanoi Game
 
-#~class Game
-	#~@disks
-#~end
-
-#~def CreateDisks()
-	#~disks[Disk.new(1), Disk.new(2), Disk.new(3)]
-#~end
+#refactor#This could be unit test class.
 
 require "Tower"
 require "Disk"
